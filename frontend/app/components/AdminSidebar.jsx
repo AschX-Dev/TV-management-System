@@ -3,7 +3,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Home, Upload, Settings, User, LogOut, Router } from "lucide-react";
 import { BsDisplay } from "react-icons/bs";
-import { MdAdminPanelSettings, MdSchedule, MdSmartDisplay } from "react-icons/md";
+import {
+  MdAdminPanelSettings,
+  MdSchedule,
+  MdSmartDisplay,
+} from "react-icons/md";
 import { LuSquareChevronLeft } from "react-icons/lu";
 import { useAuthStore } from "../store/authStore";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,34 +19,44 @@ const menuItems = [
   { title: "Home", url: "/admin/home", icon: Home },
   { title: "Registered TVs", url: "/admin/fetchAllTV", icon: BsDisplay },
   { title: "Upload Media", url: "/admin/uploadMedia", icon: Upload },
-  {title:"Recent Uploads",url:"/admin/recentUpload",icon:LuSquareChevronLeft},
+  {
+    title: "Recent Uploads",
+    url: "/admin/recentUpload",
+    icon: LuSquareChevronLeft,
+  },
+  { title: "Campaigns", url: "/admin/campaigns", icon: MdSchedule },
+  { title: "Screen Groups", url: "/admin/groups", icon: MdAdminPanelSettings },
+  { title: "Analytics", url: "/admin/analytics", icon: MdSchedule },
   { title: "Schedule", url: "/admin/schedule", icon: MdSchedule },
   { title: "Manage TVs", url: "/admin/manageTV", icon: MdSmartDisplay },
-  { title: "Manage Admin", url: "/admin/manageAdmin", icon: MdAdminPanelSettings },
+  {
+    title: "Manage Admin",
+    url: "/admin/manageAdmin",
+    icon: MdAdminPanelSettings,
+  },
   { title: "Profile", url: "/admin/profile", icon: User },
 ];
 
 const Sidebar = () => {
   // const { logout, isLoading, error,isAuthenticated } = useAuthStore();
-  const router=useRouter();
+  const router = useRouter();
   const pathname = usePathname();
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
   console.log(pathname);
-const handleLogOut=async() => {
-  try {
-    
-  localStorage.removeItem("user");
-  // // Clear persisted Redux state
-  // await purgeStoredState(persistConfig);
-  const response=await axios.post('https://tvmstd.onrender.com/api/admin/logout');
-  dispatch(logout());
-  router.push('/auth/login')
-  } catch (error) {
-    console.log(error?.response?.message)
-  }
-  
- 
-}
+  const handleLogOut = async () => {
+    try {
+      localStorage.removeItem("user");
+      // // Clear persisted Redux state
+      // await purgeStoredState(persistConfig);
+      const response = await axios.post(
+        "https://tvmstd.onrender.com/api/admin/logout"
+      );
+      dispatch(logout());
+      router.push("/auth/login");
+    } catch (error) {
+      console.log(error?.response?.message);
+    }
+  };
 
   return (
     <div className="h-screen w-52 sm:w-64 bg-blue-900 text-white p-5 flex flex-col">
@@ -51,7 +65,9 @@ const handleLogOut=async() => {
       <nav className="flex-1 space-y-3">
         {menuItems.map((item, index) => {
           const Icon = item.icon;
-          const isActive = pathname.includes(item.url) || (pathname ==='/admin' && item.title==='Home');
+          const isActive =
+            pathname.includes(item.url) ||
+            (pathname === "/admin" && item.title === "Home");
           return (
             <Link key={index} href={item.url}>
               <div

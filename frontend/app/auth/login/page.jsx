@@ -7,42 +7,63 @@ import { useAuthStore } from "@/app/store/authStore";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
-import { loginFailure, loginStart, loginSuccess, setUser } from "@/app/redux/authSlice";
+import {
+  loginFailure,
+  loginStart,
+  loginSuccess,
+  setUser,
+} from "@/app/redux/authSlice";
 import axios from "axios";
+import api from "@/app/lib/api";
 
 axios.defaults.withCredentials = true;
-// axios.defaults.baseURL = "https://tvmstd.onrender.com"; 
-// axios.defaults.withCredentials = true;
+
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router=useRouter();
-  // const { login, isLoading, error,isAuthenticated } = useAuthStore();
-const dispatch = useDispatch();
-const {user,isLoading,error}=useSelector((state)=>state.auth)
-useEffect(() => {
-  console.log("User State Updated:", user);
-}, [user]);
-//https://tvmstd.onrender.com
+  const router = useRouter();
+  const dispatch = useDispatch();
+  const { user, isLoading, error } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    console.log("User State Updated:", user);
+  }, [user]);
 
   const handleLogin = async (e) => {
+    console.log("🔵 handleLogin called!");
     e.preventDefault();
-    dispatch(loginStart())
-    
-   try {
-    
-    const response=await axios.post("https://tvmstd.onrender.com/api/admin/login", { email, password });
-    
-    dispatch(loginSuccess(response?.data?.user))
-    console.log("user",user)
-    router.push("/admin/home");
+    dispatch(loginStart());
+    console.log("🔵 Form submission prevented, starting login...");
 
-   } catch (error) {
-    console.log(error)
-    dispatch(loginFailure(error?.response?.data?.message || "Something went wrong"))
-   }
-    
+    try {
+      const response = await api.post("/admin/login", { email, password });
+      console.log("📥 Login response:", response.data);
 
+      // Store token from response body in localStorage
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        console.log(
+          "✅ Token stored in localStorage:",
+          response.data.token.substring(0, 20) + "..."
+        );
+      } else {
+        console.warn("⚠️ No token found in response");
+      }
+
+      dispatch(loginSuccess(response?.data?.user));
+      console.log("✅ User dispatched to Redux:", response?.data?.user);
+
+      // Wait a bit to ensure state is updated
+      setTimeout(() => {
+        console.log("🚀 Redirecting to /admin/home");
+        router.push("/admin/home");
+      }, 100);
+    } catch (error) {
+      console.log("❌ Login error:", error);
+      dispatch(
+        loginFailure(error?.response?.data?.message || "Something went wrong")
+      );
+    }
   };
 
   return (
@@ -125,7 +146,6 @@ useEffect(() => {
               className="w-full mt-8 py-3 px-4 bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold rounded-lg shadow-lg hover:from-green-500 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition duration-200"
               type="submit"
               disabled={isLoading}
-              
             >
               {isLoading ? (
                 <Loader className="w-6 h-6 animate-spin mx-auto" />
@@ -135,8 +155,6 @@ useEffect(() => {
             </motion.button>
           </form>
         </div>
-
-
       </motion.div>
     </div>
   );

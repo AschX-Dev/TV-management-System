@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TVMS Player</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #000;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+      }
+
+      #player {
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        display: block;
+      }
+
+      #status {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+      }
+
+      #status.connected {
+        border-left: 4px solid #10b981;
+      }
+
+      #status.disconnected {
+        border-left: 4px solid #ef4444;
+      }
+
+      .pulse {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #10b981;
+        animation: pulse 2s infinite;
+      }
+
+      .pulse.offline {
+        background: #ef4444;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      #info {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.8);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 12px;
+        z-index: 1000;
+        backdrop-filter: blur(10px);
+      }
+
+      #loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        color: #fff;
+        z-index: 999;
+      }
+
+      .spinner {
+        border: 4px solid rgba(255, 255, 255, 0.3);
+        border-top: 4px solid #fff;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Status Indicator -->
+    <div id="status" class="disconnected">
+      <div class="pulse offline"></div>
+      <span id="statusText">Connecting...</span>
+    </div>
+
+    <!-- Info Panel -->}
+    <div id="info">
+      <div><strong>TV ID:</strong> <span id="tvIdDisplay">-</span></div>
+      <div>
+        <strong>Resolution:</strong> <span id="resolutionDisplay">-</span>
+      </div>
+      <div>
+        <strong>Last Update:</strong> <span id="lastUpdate">Never</span>
+      </div>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="loading">
+      <div class="spinner"></div>
+      <p>Initializing player...</p>
+    </div>
+
+    <!-- Media Player -->
+    <video id="player" autoplay muted loop style="display: none"></video>
+
+    <!-- Socket.IO CDN -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+
+    <script>
+      // Configuration
+      const urlParams = new URLSearchParams(window.location.search);
+      const TV_ID = urlParams.get("tvId") || "TV001";
+      const API_URL = urlParams.get("apiUrl") || "http://localhost:3001";
+
+      // Elements
+      const player = document.getElementById("player");
+      const loading = document.getElementById("loading");
+      const statusDiv = document.getElementById("status");
+      const statusText = document.getElementById("statusText");
+      const pulse = document.querySelector(".pulse");
+      const tvIdDisplay = document.getElementById("tvIdDisplay");
+      const resolutionDisplay = document.getElementById("resolutionDisplay");
+      const lastUpdate = document.getElementById("lastUpdate");
+
+      // Initialize
+      tvIdDisplay.textContent = TV_ID;
+      resolutionDisplay.textContent = `${screen.width}x${screen.height}`;
+
+      // Socket.IO Connection
+      const socket = io(API_URL, {
+        transports: ["websocket", "polling"],
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        reconnectionAttempts: Infinity,
+      });
+
+      // Connection Events
+      socket.on("connect", () => {
+        console.log("✅ Connected to server");
+        updateStatus("Connected", true);
+        socket.emit("joinRoom", TV_ID);
+        sendHeartbeat();
+      });
+
+      socket.on("disconnect", () => {
+        console.log("❌ Disconnected from server");
+        updateStatus("Disconnected", false);
+      });
+
+      socket.on("connect_error", (error) => {
+        console.error("Connection error:", error);
+        updateStatus("Connection Error", false);
+      });
+
+      // Media Update Event
+      socket.on("mediaUpdate", (data) => {
+        console.log("📺 New media:", data.mediaUrl);
+        loadMedia(data.mediaUrl);
+      });
+
+      // Device Command Event
+      socket.on("deviceCommand", (data) => {
+        console.log("🎮 Command received:", data.command);
+        handleCommand(data.command);
+      });
+
+      // Functions
+      function updateStatus(text, isConnected) {
+        statusText.textContent = text;
+        statusDiv.className = isConnected ? "connected" : "disconnected";
+        pulse.className = isConnected ? "pulse" : "pulse offline";
+      }
+
+      function loadMedia(url) {
+        if (!url) return;
+
+        loading.style.display = "block";
+        player.style.display = "none";
+
+        player.src = url;
+        player.load();
+
+        player.onloadeddata = () => {
+          loading.style.display = "none";
+          player.style.display = "block";
+          player.play().catch((err) => console.error("Play error:", err));
+          lastUpdate.textContent = new Date().toLocaleTimeString();
+        };
+
+        player.onerror = () => {
+          loading.style.display = "none";
+          console.error("Failed to load media");
+          statusText.textContent = "Media Load Error";
+        };
+      }
+
+      function handleCommand(command) {
+        switch (command) {
+          case "pause":
+            player.pause();
+            statusText.textContent = "Paused";
+            break;
+          case "resume":
+            player.play();
+            statusText.textContent = "Playing";
+            break;
+          case "reboot":
+            location.reload();
+            break;
+          default:
+            console.warn("Unknown command:", command);
+        }
+      }
+
+      function sendHeartbeat() {
+        fetch(`${API_URL}/api/tv/heartbeat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            tvId: TV_ID,
+            resolution: `${screen.width}x${screen.height}`,
+          }),
+        }).catch((err) => console.error("Heartbeat error:", err));
+      }
+
+      // Load current media on start
+      fetch(`${API_URL}/api/tv/display/${TV_ID}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.mediaUrl) {
+            loadMedia(data.mediaUrl);
+          } else {
+            loading.style.display = "none";
+            statusText.textContent = "No Content";
+          }
+        })
+        .catch((err) => {
+          loading.style.display = "none";
+          console.log("No initial media found");
+          statusText.textContent = "Waiting for Content";
+        });
+
+      // Send heartbeat every 30 seconds
+      setInterval(sendHeartbeat, 30000);
+
+      // Log player info
+      console.log(`
+╔══════════════════════════════════════╗
+║        TVMS Player Started          ║
+╠══════════════════════════════════════╣
+║ TV ID: ${TV_ID.padEnd(28)}║
+║ API: ${API_URL.padEnd(30)}║
+║ Resolution: ${(screen.width + "x" + screen.height).padEnd(23)}║
+╚══════════════════════════════════════╝
+    `);
+    </script>
+  </body>
+</html>
+
+
+
+
+
+

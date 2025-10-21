@@ -1,31 +1,47 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
- const registeredTV= new mongoose.Schema({
+const registeredTV = new mongoose.Schema(
+  {
     tvId: {
-        type: String,
-        required: true,
-        unique: true},
+      type: String,
+      required: true,
+      unique: true,
+    },
+    name: {
+      type: String,
+    },
     channelID: {
-        type: String,
-        default:'announcement'
-      },
-      tvModel: {
-        type: String,
-        required: true
-      },
-      schedules:[],
-    
-      tvSize:{
-            type: String,
-            required: true
-      },
+      type: String,
+      default: "announcement",
+    },
+    tvModel: {
+      type: String,
+      required: true,
+    },
+    schedules: [],
+    resolution: {
+      type: String,
+    },
+    status: {
+      type: String,
+      enum: ["online", "offline"],
+      default: "offline",
+    },
+    lastSeen: {
+      type: Date,
+    },
+
+    tvSize: {
+      type: String,
+      required: true,
+    },
     location: {
-        type: String,
-        required: true
-      },
-   
-}, { timestamps: true });
+      type: String,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
-
-const RegisteredTV = mongoose.model('RegisteredTV', registeredTV);
+const RegisteredTV = mongoose.model("RegisteredTV", registeredTV);
 export default RegisteredTV;
