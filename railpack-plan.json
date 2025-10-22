@@ -5,11 +5,10 @@
     }
   },
   "build": {
-    "commands": [
-      "cd TVMSFB/backend && npm install"
-    ]
+    "commands": ["cd TVMSFB/backend && npm install"]
   },
   "start": {
     "command": "cd TVMSFB/backend && npm start"
   }
 }
+
