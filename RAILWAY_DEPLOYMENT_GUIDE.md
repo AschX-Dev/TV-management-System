@@ -75,6 +75,8 @@ Railway will automatically:
    npm start
    ```
 
+**Important:** If you get a build error like "npm: not found", Railway needs additional configuration. The project includes `railpack-plan.json` and `railway.json` files to help Railway understand the project structure.
+
 **Narration:** "We need to tell Railway where our backend code lives and how to start it."
 
 ---
@@ -209,20 +211,26 @@ git push origin main
 
 ## 🐛 Troubleshooting
 
-### Issue 1: "Build Failed"
+### Issue 1: "Build Failed" or "npm: not found"
 
 **Common causes:**
 
 - Missing dependencies in `package.json`
 - Incorrect start command
 - Wrong root directory
+- Railway can't find npm in the build context
 
 **Fix:**
 
-1. Check **Deployments** tab for build logs
-2. Verify `package.json` has all dependencies
-3. Ensure start command is `npm start`
-4. Check root directory is `TVMSFB/backend`
+1. **Check Root Directory:** Ensure it's set to `TVMSFB/backend` in Railway settings
+2. **Check Build Logs:** Look for specific error messages in Deployments tab
+3. **Verify Configuration Files:** The project includes `railpack-plan.json` and `railway.json` to help Railway
+4. **Manual Build Command:** If needed, set build command to `cd TVMSFB/backend && npm install`
+5. **Start Command:** Ensure it's `npm start` (not `cd TVMSFB/backend && npm start`)
+
+**If still failing:**
+- Try setting **Build Command** to: `cd TVMSFB/backend && npm install`
+- Try setting **Start Command** to: `cd TVMSFB/backend && npm start`
 
 ### Issue 2: "Service Won't Start"
 
