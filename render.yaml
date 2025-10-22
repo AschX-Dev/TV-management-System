@@ -1,0 +1,31 @@
+# Render Blueprint for TVMS Backend
+# This file allows one-click deployment to Render
+
+services:
+  # Backend Node.js Service
+  - type: web
+    name: tvms-backend
+    env: node
+    region: oregon # Change to your preferred region
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3002
+      - key: MONGO_URI
+        sync: false # Set manually in Render dashboard
+      - key: JWT_SECRET
+        generateValue: true # Auto-generate secure secret
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: FRONTEND_URL
+        sync: false # Add your Vercel URL here
+

@@ -42,35 +42,54 @@
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### ⚡ Deploy to Production (15 minutes)
 
+**Free deployment to Vercel + Render:**
+
+1. **Backend:** Deploy to [Render](https://render.com) → [Step-by-step guide](./DEPLOY_NOW.md)
+2. **Frontend:** Deploy to [Vercel](https://vercel.com) → [Step-by-step guide](./DEPLOY_NOW.md)
+
+📖 **Deployment guides:**
+- [⚡ Quick Deploy (15 min)](./DEPLOY_NOW.md) - Fastest way to get online
+- [📖 Full Deployment Guide](./DEPLOYMENT_GUIDE.md) - Complete instructions
+- [✅ Deployment Checklist](./DEPLOYMENT_CHECKLIST.md) - Don't miss a step
+- [🔐 Environment Setup](./ENV_SETUP_GUIDE.md) - All credentials explained
+
+---
+
+### 💻 Local Development Setup
+
+**Prerequisites:**
 - Node.js 18+
 - MongoDB Atlas account (free)
 - Cloudinary account (free)
 
-### Installation
+**Installation:**
 
 ```bash
 # Clone repository
-git clone https://github.com/yourorg/tvms.git
-cd tvms/TVMSFB
+git clone https://github.com/AschX-Dev/TV-management-System.git
+cd TV-management-System/TVMSFB
 
 # Backend setup
 cd backend
 npm install
-cp .env.example .env
-# Edit .env with your credentials
+# Create .env file with your credentials (see ENV_SETUP_GUIDE.md)
 npm run dev
 
 # Frontend setup (in new terminal)
 cd ../frontend
 npm install
+# Create .env.local file (see ENV_SETUP_GUIDE.md)
 npm run dev
 ```
 
 Open http://localhost:3000 to access the dashboard!
 
-📖 **Full setup guide**: [QUICK_START.md](./QUICK_START.md)
+📖 **Local setup guides:**
+- [🚀 Quick Start Guide](./QUICK_START.md) - Detailed local setup
+- [🔐 Environment Variables](./ENV_SETUP_GUIDE.md) - Configuration help
+- [🧪 Testing Guide](./TESTING_GUIDE.md) - Verify everything works
 
 ---
 
@@ -126,12 +145,29 @@ _Track impressions, uptime, and content performance_
 
 ## 📚 Documentation
 
-| Document                                                | Description                               |
-| ------------------------------------------------------- | ----------------------------------------- |
-| [API Documentation](./backend/API_DOCUMENTATION.md)     | Complete REST API reference with examples |
-| [Quick Start Guide](./QUICK_START.md)                   | Get up and running in 5 minutes           |
-| [Roadmap & Improvements](./ROADMAP_AND_IMPROVEMENTS.md) | Future features and market strategy       |
-| [Contributing](./CONTRIBUTING.md)                       | How to contribute to the project          |
+### 🚀 Getting Started
+| Document | Description |
+|----------|-------------|
+| [⚡ Deploy Now (15 min)](./DEPLOY_NOW.md) | Fastest way to deploy for free |
+| [📖 Full Deployment Guide](./DEPLOYMENT_GUIDE.md) | Complete deployment instructions |
+| [✅ Deployment Checklist](./DEPLOYMENT_CHECKLIST.md) | Step-by-step deployment tasks |
+| [🎬 Deployment Video Script](./DEPLOYMENT_VIDEO_SCRIPT.md) | Tutorial for creating deployment videos |
+| [🚀 Quick Start Guide](./QUICK_START.md) | Local development setup |
+| [🔐 Environment Setup](./ENV_SETUP_GUIDE.md) | All credentials and variables explained |
+
+### 📖 Reference
+| Document | Description |
+|----------|-------------|
+| [API Documentation](./backend/API_DOCUMENTATION.md) | Complete REST API reference |
+| [🧪 Testing Guide](./TESTING_GUIDE.md) | Comprehensive testing checklist |
+| [🌐 Network Access Guide](./NETWORK_ACCESS_GUIDE.md) | Multi-device WiFi setup |
+| [📺 TV Setup Guide](./TV_SETUP_GUIDE.md) | Physical TV device configuration |
+
+### 🗺️ Planning
+| Document | Description |
+|----------|-------------|
+| [Roadmap & Improvements](./ROADMAP_AND_IMPROVEMENTS.md) | Future features and strategy |
+| [System Summary](./SYSTEM_SUMMARY.md) | Technical overview |
 
 ---
 
