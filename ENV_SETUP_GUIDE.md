@@ -7,6 +7,7 @@ This guide will help you set up environment variables for development and produc
 ## 📋 Quick Reference
 
 ### Backend Variables (8 required)
+
 1. `MONGO_URI` - MongoDB connection string
 2. `JWT_SECRET` - Secret key for JWT tokens
 3. `PORT` - Server port (3002)
@@ -17,6 +18,7 @@ This guide will help you set up environment variables for development and produc
 8. `FRONTEND_URL` - Frontend URL for CORS
 
 ### Frontend Variables (2 required)
+
 1. `NEXT_PUBLIC_API_URL` - Backend API endpoint
 2. `NEXT_PUBLIC_WS_URL` - WebSocket endpoint
 
@@ -74,6 +76,7 @@ NEXT_PUBLIC_WS_URL=http://localhost:3002
 ### 1. MongoDB URI (MONGO_URI)
 
 **Step-by-step:**
+
 1. Go to [MongoDB Atlas](https://cloud.mongodb.com)
 2. Log in to your account
 3. Click **"Database"** in the left sidebar
@@ -85,11 +88,13 @@ NEXT_PUBLIC_WS_URL=http://localhost:3002
 9. Add your database name after `.net/` (e.g., `/tvms`)
 
 **Final format:**
+
 ```
 mongodb+srv://myuser:mypassword@cluster0.xxxxx.mongodb.net/tvms?retryWrites=true&w=majority
 ```
 
-**Important:** 
+**Important:**
+
 - Use the **database user** password, not your Atlas account password
 - If you forgot the password, create a new database user in **Database Access**
 
@@ -98,20 +103,24 @@ mongodb+srv://myuser:mypassword@cluster0.xxxxx.mongodb.net/tvms?retryWrites=true
 ### 2. JWT Secret (JWT_SECRET)
 
 **Option A: Generate in Node.js**
+
 ```javascript
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
 
 **Option B: Generate Online**
+
 1. Go to [RandomKeygen](https://randomkeygen.com/)
 2. Copy a **CodeIgniter Encryption Key** or **256-bit WPA Key**
 
 **Example:**
+
 ```
 JWT_SECRET=a7f9c8e6d5b4a3f2e1d9c8b7a6f5e4d3c2b1a9f8e7d6c5b4a3f2e1d0c9b8a7f6
 ```
 
 **Requirements:**
+
 - Minimum 32 characters
 - Mix of letters and numbers
 - Keep it secret and secure!
@@ -121,6 +130,7 @@ JWT_SECRET=a7f9c8e6d5b4a3f2e1d9c8b7a6f5e4d3c2b1a9f8e7d6c5b4a3f2e1d0c9b8a7f6
 ### 3. Cloudinary Credentials
 
 **Step-by-step:**
+
 1. Go to [Cloudinary Console](https://cloudinary.com/console)
 2. Log in to your account
 3. You'll see your **Dashboard**
@@ -131,6 +141,7 @@ JWT_SECRET=a7f9c8e6d5b4a3f2e1d9c8b7a6f5e4d3c2b1a9f8e7d6c5b4a3f2e1d0c9b8a7f6
    - **API Secret** (click "👁️ Reveal")
 
 **Example:**
+
 ```env
 CLOUDINARY_CLOUD_NAME=dxxxxx123
 CLOUDINARY_API_KEY=123456789012345
@@ -144,6 +155,7 @@ CLOUDINARY_API_SECRET=abcdefghijklmnopqrstuvwxyz123456
 **Only needed if you want email features (password reset, notifications)**
 
 **Step-by-step:**
+
 1. Go to [SendGrid](https://app.sendgrid.com)
 2. Sign up for a free account
 3. Go to **Settings** → **API Keys**
@@ -154,6 +166,7 @@ CLOUDINARY_API_SECRET=abcdefghijklmnopqrstuvwxyz123456
 8. **Copy the key immediately** (you won't see it again!)
 
 **Example:**
+
 ```env
 SENDGRID_API_KEY=SG.xxxxxxxxxxxxxxxxxxx.yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy
 FROM_EMAIL=noreply@yourdomain.com
@@ -213,13 +226,16 @@ To test on multiple devices on the same WiFi network:
 ### Step 1: Find Your Computer's IP Address
 
 **Windows:**
+
 ```powershell
 ipconfig
 ```
+
 Look for **"Wireless LAN adapter Wi-Fi"** → **IPv4 Address**
 Example: `192.168.100.150`
 
 **macOS/Linux:**
+
 ```bash
 ifconfig | grep "inet "
 ```
@@ -241,7 +257,7 @@ Edit `backend/server.js` - add your IP to CORS whitelist:
 const corsOptions = {
   origin: [
     "http://localhost:3000",
-    "http://192.168.100.150:3000",  // Add this line
+    "http://192.168.100.150:3000", // Add this line
   ],
   credentials: true,
 };
@@ -257,6 +273,7 @@ const corsOptions = {
 ### Step 5: Access from Other Devices
 
 On your phone/tablet/another computer (connected to same WiFi):
+
 ```
 http://192.168.100.150:3000/display/TV001
 ```
@@ -266,6 +283,7 @@ http://192.168.100.150:3000/display/TV001
 ## ✅ Verification Checklist
 
 ### Backend Environment Variables
+
 - [ ] `MONGO_URI` - Can connect to MongoDB Atlas
 - [ ] `JWT_SECRET` - At least 32 characters
 - [ ] `PORT` - Set to 3002
@@ -276,10 +294,12 @@ http://192.168.100.150:3000/display/TV001
 - [ ] `FRONTEND_URL` - Correct frontend URL
 
 ### Frontend Environment Variables
+
 - [ ] `NEXT_PUBLIC_API_URL` - Points to backend API
 - [ ] `NEXT_PUBLIC_WS_URL` - Points to backend WebSocket
 
 ### Testing
+
 - [ ] Backend starts without errors: `cd backend && npm run dev`
 - [ ] Frontend starts without errors: `cd frontend && npm run dev`
 - [ ] Can log in to admin panel
@@ -292,26 +312,34 @@ http://192.168.100.150:3000/display/TV001
 ## 🐛 Troubleshooting
 
 ### Error: "MongoServerError: bad auth"
+
 **Fix:** Your MongoDB username or password is incorrect
+
 - Go to MongoDB Atlas → Database Access
 - Create a new user or reset password
 - Update `MONGO_URI` with new credentials
 
 ### Error: "ETIMEDOUT" connecting to MongoDB
+
 **Fix:** Your IP is not whitelisted
+
 - Go to MongoDB Atlas → Network Access
 - Click "Add IP Address"
 - Click "Allow Access from Anywhere" (0.0.0.0/0)
 - Click "Confirm"
 
 ### Error: "Cloudinary upload failed"
+
 **Fix:** Invalid Cloudinary credentials
+
 - Double-check all three values in Cloudinary dashboard
 - Ensure no extra spaces in the `.env` file
 - API Secret might be hidden - click the eye icon to reveal
 
 ### Error: "jwt must be provided"
+
 **Fix:** Frontend can't reach backend
+
 - Check `NEXT_PUBLIC_API_URL` is correct
 - Ensure backend is running
 - Check browser console for network errors
@@ -322,6 +350,7 @@ http://192.168.100.150:3000/display/TV001
 ## 🔒 Security Best Practices
 
 ### ✅ DO:
+
 - Keep `.env` and `.env.local` files in `.gitignore`
 - Use strong, random JWT secrets
 - Rotate secrets periodically
@@ -329,6 +358,7 @@ http://192.168.100.150:3000/display/TV001
 - Whitelist specific IPs when possible
 
 ### ❌ DON'T:
+
 - Never commit `.env` files to Git
 - Don't share your secrets publicly
 - Don't use simple passwords like "password123"
@@ -381,4 +411,3 @@ cd ..
 ---
 
 **Need help?** Check the full [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) for more details!
-

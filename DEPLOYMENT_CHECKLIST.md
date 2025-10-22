@@ -7,12 +7,14 @@ Use this checklist to ensure a smooth deployment process.
 ## 📋 Pre-Deployment Checklist
 
 ### 1. Code & Repository
+
 - [ ] All code is committed and pushed to GitHub
 - [ ] Repository URL: `https://github.com/AschX-Dev/TV-management-System`
 - [ ] All recent changes are on the `main` branch
 - [ ] No sensitive data (passwords, API keys) in code
 
 ### 2. Environment Setup
+
 - [ ] MongoDB Atlas cluster is running
 - [ ] MongoDB Atlas IP whitelist includes `0.0.0.0/0` (all IPs for cloud deployment)
 - [ ] MongoDB database user has read/write permissions
@@ -20,6 +22,7 @@ Use this checklist to ensure a smooth deployment process.
 - [ ] Cloudinary credentials are ready
 
 ### 3. Configuration Files
+
 - [ ] `backend/package.json` has `"start": "node server.js"` script
 - [ ] `frontend/package.json` has proper build scripts
 - [ ] `.gitignore` excludes `.env` and `.env.local` files
@@ -114,21 +117,25 @@ NEXT_PUBLIC_WS_URL=https://tvms-backend-xxxx.onrender.com
 ## 🧪 Post-Deployment Testing
 
 ### Test 1: Backend Health ✅
+
 - [ ] Visit: `https://your-backend-url.onrender.com`
 - [ ] Should see a response (not 404)
 
 ### Test 2: Frontend Access ✅
+
 - [ ] Visit: `https://your-project.vercel.app`
 - [ ] Homepage loads correctly
 - [ ] No console errors in browser DevTools
 
 ### Test 3: Login ✅
+
 - [ ] Go to: `https://your-project.vercel.app/auth/login`
 - [ ] Login with admin credentials
 - [ ] Should redirect to dashboard
 - [ ] Check browser console for errors
 
 ### Test 4: Register TV ✅
+
 - [ ] Go to: "Manage TV" → "Register New TV"
 - [ ] Fill in TV details:
   ```
@@ -141,11 +148,13 @@ NEXT_PUBLIC_WS_URL=https://tvms-backend-xxxx.onrender.com
 - [ ] Should see success message
 
 ### Test 5: View Registered TVs ✅
+
 - [ ] Go to: "Fetch All TVs"
 - [ ] Should see TV001 in the list
 - [ ] Status should show (may be offline)
 
 ### Test 6: Upload Media ✅
+
 - [ ] Go to: "Upload Media" → "Direct Upload"
 - [ ] Select TV: TV001
 - [ ] Fill in title and description
@@ -155,6 +164,7 @@ NEXT_PUBLIC_WS_URL=https://tvms-backend-xxxx.onrender.com
 - [ ] Should see success message
 
 ### Test 7: TV Display ✅
+
 - [ ] Open new incognito tab
 - [ ] Visit: `https://your-project.vercel.app/display`
 - [ ] Enter TV ID: TV001
@@ -163,6 +173,7 @@ NEXT_PUBLIC_WS_URL=https://tvms-backend-xxxx.onrender.com
 - [ ] Check WebSocket status (top right corner)
 
 ### Test 8: Real-time Update ✅
+
 - [ ] Keep TV display tab open
 - [ ] In admin tab, upload new media to TV001
 - [ ] TV display should update automatically (within 5-10 seconds)
@@ -172,35 +183,45 @@ NEXT_PUBLIC_WS_URL=https://tvms-backend-xxxx.onrender.com
 ## 🐛 Common Issues & Quick Fixes
 
 ### ❌ Backend shows "Application failed to respond"
+
 **Fix:**
+
 - Check Render logs for errors
 - Verify `MONGO_URI` is correct
 - Ensure MongoDB Atlas whitelist includes `0.0.0.0/0`
 - Wait 30 seconds (free tier wakes up slowly)
 
 ### ❌ Frontend shows "Failed to fetch"
+
 **Fix:**
+
 - Verify `NEXT_PUBLIC_API_URL` in Vercel environment variables
 - Check if backend URL is accessible
 - Look for CORS errors in browser console
 - Ensure `FRONTEND_URL` is set in backend environment
 
 ### ❌ "Unauthorized" errors after login
+
 **Fix:**
+
 - Check if `JWT_SECRET` is set in backend
 - Clear browser cookies and localStorage
 - Try logging in again
 - Check backend logs for JWT errors
 
 ### ❌ Images not uploading
+
 **Fix:**
+
 - Verify Cloudinary credentials in backend environment
 - Check Cloudinary dashboard for quota
 - Look for upload errors in backend logs
 - Ensure file size is under 10MB
 
 ### ❌ WebSocket not connecting on TV display
+
 **Fix:**
+
 - Check if `NEXT_PUBLIC_WS_URL` is correct
 - Verify backend is running (visit the URL)
 - Render free tier may sleep - wait 30 seconds
@@ -211,18 +232,21 @@ NEXT_PUBLIC_WS_URL=https://tvms-backend-xxxx.onrender.com
 ## 📊 Monitoring Your Deployment
 
 ### Vercel Dashboard
+
 - View deployment history
 - Check build logs
 - Monitor bandwidth usage
 - View analytics
 
 ### Render Dashboard
+
 - Check service status
 - View application logs
 - Monitor CPU/Memory usage
 - Check deployment history
 
 ### MongoDB Atlas
+
 - Monitor database size
 - Check connection count
 - View slow queries
@@ -241,7 +265,7 @@ Your deployment is successful when:
 ✅ TV display shows uploaded media  
 ✅ Real-time updates work (upload → display updates)  
 ✅ No console errors in browser  
-✅ No errors in backend logs  
+✅ No errors in backend logs
 
 ---
 
@@ -276,10 +300,10 @@ git push origin main
 Once all checkboxes are ticked, your TVMS is live and accessible worldwide! 🌍
 
 **Share your deployment:**
+
 - Admin Panel: `https://your-project.vercel.app/admin`
 - TV Display: `https://your-project.vercel.app/display/TV001`
 
 ---
 
 **Need help?** Refer to `DEPLOYMENT_GUIDE.md` for detailed instructions!
-
