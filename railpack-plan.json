@@ -9,6 +9,9 @@
   },
   "start": {
     "command": "cd TVMSFB/backend && npm start"
+  },
+  "variables": {
+    "NODE_ENV": "production"
   }
 }
 
